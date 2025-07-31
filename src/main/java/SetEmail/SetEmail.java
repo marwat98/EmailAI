@@ -2,13 +2,10 @@ package SetEmail;
 
 import ButtonManager.ButtonManager;
 import CancelOption.CancelOption;
-import OpenAIConfigurator.OpenAIConfigurator;
 import FileManagerClasses.FileManagerOpenAIClass;
-import FileManagerClasses.FileManagerSendEmailClass;
 import FileManagerClasses.FileManagerClass;
 import Alert.AlertClass;
 import Interfaces.WindowViewInterface;
-import MenuProgram.Menu;
 import RefreshWindow.RefreshWindow;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
 import java.nio.file.Path;
@@ -27,44 +23,36 @@ import java.nio.file.Paths;
 public class SetEmail implements WindowViewInterface{
     public static final String MAIN_PACKAGE_FILES = "src/main/ProgramFiles";
     private static final Path FROM_PATH = Paths.get(MAIN_PACKAGE_FILES , "myEmailFile.txt");
-    private static final Path TO_PATH = Paths.get(MAIN_PACKAGE_FILES, "sendEmailFile.txt");
     private static final Path TITLE_PATH = Paths.get(MAIN_PACKAGE_FILES , "emailTitleFile.txt");
     private static final Path API_PATH = Paths.get(MAIN_PACKAGE_FILES , "APIKEY.txt");
     private static final Path DESTRIPTION_PATH = Paths.get(MAIN_PACKAGE_FILES , "descriptionFile.txt");
-    private static final Path LINK = Paths.get(MAIN_PACKAGE_FILES, "link.txt");
-    private static final Path TEST = Paths.get(MAIN_PACKAGE_FILES, "test1.txt");
 
     public File myEmailFile = new File(String.valueOf(FROM_PATH));
-    public File sendEmailFile = new File(String.valueOf(TO_PATH));
     public File titleFile = new File(String.valueOf(TITLE_PATH));
     public File apiFile = new File(String.valueOf(API_PATH));
     public File descriptionFile = new File(String.valueOf(DESTRIPTION_PATH));
-    public File linkFile = new File(String.valueOf(LINK));
-    public File testFile = new File(String.valueOf(TO_PATH));
 
     public FileManagerClass fileSetYourEmailClass = new FileManagerClass(myEmailFile.toPath());
-    public FileManagerClass readLinkOfFile = new FileManagerClass(linkFile.toPath());
     public FileManagerOpenAIClass saveTitleOpenAI = new FileManagerOpenAIClass(titleFile.toPath());
     public FileManagerOpenAIClass descriptionOpenAI = new FileManagerOpenAIClass(descriptionFile.toPath());
-    public FileManagerSendEmailClass fileSetSendEmailClass = new FileManagerSendEmailClass(sendEmailFile.toPath());
 
 
     public TextField fromSetEmail = new TextField();
-    public TextField toSetEmail = new TextField();
     public TextField title = new TextField();
     public TextArea description = new TextArea();
     public Separator separator = new Separator();
     public RefreshWindow refresh = new RefreshWindow();
     public ButtonManager button = new ButtonManager();
     public AlertClass alert = new AlertClass();
-    public OpenAIConfigurator openAIConfigurator = new OpenAIConfigurator();
     public Stage stage = new Stage();
 
 
-
-    String apiKey = saveTitleOpenAI.readFile(apiFile);
-
-    // method which have settings position title on window
+    /**
+     * method which have title window
+     * @param hbox which contain position in window
+     * @param labelText variable which contain title window
+     * @return HBox
+     */
     @Override
     public HBox title(HBox hbox,String labelText){
         Label writeYourEmail = new Label(labelText);
@@ -78,8 +66,8 @@ public class SetEmail implements WindowViewInterface{
     }
 
     /**
-     * method which conatin inputs for prepare to send message email
-     * @param vbox
+     * method which conatain field for your email, title email , description email
+     * @param vbox position on window place
      * @return vbox of settings position inputs on window
      */
     @Override
@@ -108,21 +96,8 @@ public class SetEmail implements WindowViewInterface{
         select.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                FileChooser fileChooser = new FileChooser();
-
-                fileChooser.setTitle("Choose email file");
-                fileChooser.setInitialDirectory(new File("C:\\Users\\Marcin\\Desktop"));
-                File selectFile = fileChooser.showOpenDialog(stage);
-                FileManagerClass selectFileTest = new FileManagerClass(selectFile.toPath());
-                String selectFileTest2 = selectFileTest.showContent();
-                FileManagerOpenAIClass writeToFileTest = new FileManagerOpenAIClass(testFile.toPath());
-
-                if(selectFile != null){
-                    showSelectFile.setText( "Selected file: " + selectFile);
-                    writeToFileTest .writeToFile(selectFileTest2);
-                } else {
-                    alert.alertMessage("Don't choose file", "You don't choosing file");
-                }
+                SelectFile selectFile = new SelectFile();
+                selectFile.selectFile(showSelectFile,alert,stage);
             }
         });
 
@@ -162,59 +137,21 @@ public class SetEmail implements WindowViewInterface{
         String showDescriptionAI = descriptionOpenAI.showContent();
         description.setText(showDescriptionAI);
 
-        //Button to generate title and descirption of using OpenAI
+        //Button to generate title using OpenAI
         Button generateTitleButton = button.setButtonSize("Generate Title",200,20);
         generateTitleButton.setOnAction(e->{
-
-            // Variable which generate title using OpenAI
-            String generateTitle  = openAIConfigurator.generate("Generate only one email title with greetings without description",apiKey);
-
-            // Input which set generated title
-            title.setText(generateTitle);
-
-            // Variable which get title of input
-            String input = title.getText();
-
-            // Variable which checking if writeToFile method return true
-            boolean writeTitle = saveTitleOpenAI.writeToFile(input);
-            if(writeTitle){
-                alert.alertMessage("Succes","✅ Generating title");
-            } else {
-                alert.alertMessage("Fail","❌ Generating title fail!");
-            }
-            // refresh window after showing title
-            refresh.refreshWindow(title, TITLE_PATH);
+            GenerateTitle generateTitle = new GenerateTitle();
+            generateTitle.generateOpenAI(title,alert,refresh);
         });
 
-        // Action saving emails in file
+        //Button to generate description using OpenAI
         Button generateDescriptionButton = button.setButtonSize("Generate Description",200, 20);
         generateDescriptionButton.setOnAction(e->{
-            // Variable which read title File
-            String readTitle = saveTitleOpenAI.readFile(titleFile);
-
-            // Varaible which set description to generating
-            String generateDescription  = openAIConfigurator.generate("Generate a description based on the title inside the file I added"
-                    + readTitle +
-                    "Sentence have to max 10 words on the end write Look more and click in link below additionaly in the next line add link of file" + readLinkOfFile.showContent()
-                    + "and add one empty next line and second Your sincerely Sales Menager AI",apiKey);
-
-            description.setText(generateDescription);
-
-            // Variable which show description in TextField
-            String inputDescription = description.getText();
-
-            // Variable which checking if writeToFile method return true
-            boolean writeDescription = descriptionOpenAI.writeToFile(inputDescription);
-            if(writeDescription){
-                alert.alertMessage("Succes","✅ Generating descirption");
-            } else {
-                alert.alertMessage("Fail","❌ Generating description fail!");
-            }
-            // refresh window after showing description
-            refresh.refreshWindow(description,DESTRIPTION_PATH);
+           GenerateDescription generateDescription = new GenerateDescription();
+           generateDescription.generateOpenAI(description,alert,refresh);
         });
 
-        // HBox for button generate message and title of using OpenAI
+        // HBox for title and description
         HBox buttonRow = new HBox();
         buttonRow.setAlignment(Pos.BOTTOM_CENTER);
         buttonRow.getChildren().addAll(generateTitleButton, generateDescriptionButton);
@@ -242,9 +179,9 @@ public class SetEmail implements WindowViewInterface{
     }
 
     /**
-     * method with button cancel and save on window
-     * @param hbox
-     * @return hbox with position buttons cancel and save on window
+     * method with button cancel and save
+     * @param hbox class which contain position in window
+     * @return hbox with position buttons cancel and save in window
      */
     @Override
     public HBox buttonPartOfWindow(HBox hbox) {
