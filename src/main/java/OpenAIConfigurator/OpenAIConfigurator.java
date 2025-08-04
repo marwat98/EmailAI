@@ -16,7 +16,7 @@ public class OpenAIConfigurator implements OpenAIInterface {
      * @return String with answer
      */
     @Override
-    public String generate(String text, String apiKey){
+    public String generate(String text, String apiKey) {
         if ((text == null || text.isEmpty()) || (apiKey == null || apiKey.isEmpty())) {
             throw new IllegalArgumentException("Text or API key cannot be null or empty");
         }

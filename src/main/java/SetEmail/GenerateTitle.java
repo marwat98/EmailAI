@@ -34,24 +34,27 @@ public class GenerateTitle implements GenerateInterface {
      */
     @Override
     public void generateOpenAI(TextInputControl title, AlertClass alert, RefreshWindow refresh) {
+        try{
+            // Variable which generate title using OpenAI
+            String generateTitle  = openAIConfigurator.generate("Generate only one email title with greetings without description",apiKey);
 
-        // Variable which generate title using OpenAI
-        String generateTitle  = openAIConfigurator.generate("Generate only one email title with greetings without description",apiKey);
+            // Input which set generated title
+            title.setText(generateTitle);
 
-        // Input which set generated title
-        title.setText(generateTitle);
+            // Variable which get title of input
+            String input = title.getText();
 
-        // Variable which get title of input
-        String input = title.getText();
-
-        // Variable which checking if writeToFile method return true
-        boolean writeTitle = fileManagerTitleOpenAI.writeToFile(input);
-        if(writeTitle){
-            alert.alertMessage("Succes","✅ Generating title");
-        } else {
-            alert.alertMessage("Fail","❌ Generating title fail!");
+            // Variable which checking if writeToFile method return true
+            boolean writeTitle = fileManagerTitleOpenAI.writeToFile(input);
+            if(writeTitle){
+                alert.alertMessage("Succes","✅ Generating title");
+            } else {
+                alert.alertMessage("Fail","❌ Generating title fail!");
+            }
+            // refresh window after showing title
+            refresh.refreshWindow(title, TITLE_PATH);
+        } catch (Exception e) {
+            alert.alertMessage("File/API Error", "Problem with saving or generating: " + e.getMessage());
         }
-        // refresh window after showing title
-        refresh.refreshWindow(title, TITLE_PATH);
     }
 }

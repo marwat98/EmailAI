@@ -1,5 +1,6 @@
 package Settings;
 
+import CancelOption.CancelOption;
 import Interfaces.WindowViewInterface;
 import MenuProgram.Menu;
 import FileManagerClasses.FileManagerOpenAIClass;
@@ -152,50 +153,21 @@ public class Settings extends SetEmail implements WindowViewInterface {
 
         // Action returning to menu window
         cancel.setOnAction( e->{
-            Stage currentlyWindow = (Stage) cancel.getScene().getWindow();
-            currentlyWindow.close();
-            try {
-                new Menu().start(new Stage());
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
+            CancelOption cancelOption = new CancelOption();
+            cancelOption.cancel(cancel);
         });
 
         // Action which save settings
         save.setOnAction(e->{
-          String checkAPIKey = apiFieldKey.getText().trim();
-          String choosePostOfficeOption = postOfficeBox.getValue();
-          String checkHostAdress = hostAddressField.getText().trim();
-          String checkPostPassword = tokenOrPasswordPostOfficeField.getText().trim();
-          String checkPlaceOfChoice = placeOfChoiceLabelField.getText().trim();
-
-          if(checkAPIKey.isEmpty()){
-              alert.alertMessage("Empty field!", "❌ Your API Key field is empty");
-              return;
-          }
-          if(checkHostAdress.isEmpty()){
-              alert.alertMessage("Empty field!", "❌ Your Host Adress field is empty");
-              return;
-          }
-          if(checkPostPassword.isEmpty()){
-              alert.alertMessage("Empty field!", "❌ Your Post Password field is empty");
-              return;
-          }
-            if(checkPlaceOfChoice.isEmpty()){
-                alert.alertMessage("Empty field!", "❌ Your Place of choice field is empty");
-                return;
-            }
-
-
-          boolean saveAPIKey = apiKeySave.writeToFile(checkAPIKey);
-          boolean saveChoosePostOfficeOption = postOfficeOption.writeToFile(choosePostOfficeOption);
-          boolean saveHostAdress = hostAddressSave.writeToFile(checkHostAdress);
-          boolean savePostPassword = postPasswordSave.writeToFile(checkPostPassword);
-          boolean savePlaceOfChoice = placeOfChoiceSave.writeToFile(checkPlaceOfChoice);
-
-          if(saveAPIKey && saveChoosePostOfficeOption && saveHostAdress && savePostPassword && savePlaceOfChoice){
-              alert.alertMessage("Succes","✅ Settings are saving");
-          }
+            SettingsField settingsField = new SettingsField(
+                    apiFieldKey.getText().trim(),
+                    postOfficeBox.getValue(),
+                    hostAddressField.getText().trim(),
+                    tokenOrPasswordPostOfficeField.getText().trim(),
+                    placeOfChoiceLabelField.getText().trim()
+            );
+            SaveSettings saveSettings = new SaveSettings();
+            saveSettings.saveSettings(settingsField,alert);
 
         });
 
