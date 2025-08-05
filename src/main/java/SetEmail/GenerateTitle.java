@@ -1,30 +1,18 @@
 package SetEmail;
 
 import Alert.AlertClass;
-import FileManagerClasses.FileManagerOpenAIClass;
+import FileResources.FileRecources;
 import Interfaces.GenerateInterface;
 import OpenAIConfigurator.OpenAIConfigurator;
 import RefreshWindow.RefreshWindow;
 import javafx.scene.control.TextInputControl;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static SetEmail.SetEmail.MAIN_PACKAGE_FILES;
-
 public class GenerateTitle implements GenerateInterface {
 
-    final Path TITLE_PATH = Paths.get(MAIN_PACKAGE_FILES , "emailTitleFile.txt");
-    final Path API_PATH = Paths.get(MAIN_PACKAGE_FILES , "APIKEY.txt");
-
-    File apiFile = new File(String.valueOf(API_PATH));
-    File titleFile = new File(String.valueOf(TITLE_PATH));
-
-    FileManagerOpenAIClass fileManagerTitleOpenAI = new FileManagerOpenAIClass(titleFile.toPath());
-
+    // class where are paths , files , objects to serve methods
+    FileRecources fileRecources = new FileRecources();
+    // class which settings Open AI
     OpenAIConfigurator openAIConfigurator = new OpenAIConfigurator();
-    String apiKey = fileManagerTitleOpenAI.readFile(apiFile);
 
     /**
      *
@@ -34,9 +22,10 @@ public class GenerateTitle implements GenerateInterface {
      */
     @Override
     public void generateOpenAI(TextInputControl title, AlertClass alert, RefreshWindow refresh) {
+        String apiKeyTitle = fileRecources.fileManagerTitleOpenAI.readFile(fileRecources.apiFile);
         try{
             // Variable which generate title using OpenAI
-            String generateTitle  = openAIConfigurator.generate("Generate only one email title with greetings without description",apiKey);
+            String generateTitle  = openAIConfigurator.generate("Generate only one email title with greetings without description", apiKeyTitle);
 
             // Input which set generated title
             title.setText(generateTitle);
@@ -45,14 +34,14 @@ public class GenerateTitle implements GenerateInterface {
             String input = title.getText();
 
             // Variable which checking if writeToFile method return true
-            boolean writeTitle = fileManagerTitleOpenAI.writeToFile(input);
+            boolean writeTitle = fileRecources.fileManagerTitleOpenAI.writeToFile(input);
             if(writeTitle){
                 alert.alertMessage("Succes","✅ Generating title");
             } else {
                 alert.alertMessage("Fail","❌ Generating title fail!");
             }
             // refresh window after showing title
-            refresh.refreshWindow(title, TITLE_PATH);
+            refresh.refreshWindow(title, fileRecources.TITLE_PATH);
         } catch (Exception e) {
             alert.alertMessage("File/API Error", "Problem with saving or generating: " + e.getMessage());
         }

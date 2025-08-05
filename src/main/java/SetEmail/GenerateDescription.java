@@ -1,29 +1,15 @@
 package SetEmail;
 
 import Alert.AlertClass;
-import FileManagerClasses.FileManagerClass;
-import FileManagerClasses.FileManagerOpenAIClass;
+import FileResources.FileRecources;
 import RefreshWindow.RefreshWindow;
 import javafx.scene.control.TextInputControl;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static SetEmail.SetEmail.MAIN_PACKAGE_FILES;
 
 public class GenerateDescription extends GenerateTitle {
 
-    final Path DESTRIPTION_PATH = Paths.get(MAIN_PACKAGE_FILES , "descriptionFile.txt");
-    final Path LINK = Paths.get(MAIN_PACKAGE_FILES, "link.txt");
-
-    File descriptionFile = new File(String.valueOf(DESTRIPTION_PATH));
-    File linkFile = new File(String.valueOf(LINK));
-
-    FileManagerClass readLinkOfFile = new FileManagerClass(linkFile.toPath());
-    FileManagerOpenAIClass fileManagerDescriptionOpenAI = new FileManagerOpenAIClass(descriptionFile.toPath());
-
-    String apiKey = fileManagerDescriptionOpenAI.readFile(apiFile);
+    // class where are paths , files , objects to serve methods
+    FileRecources fileRecources = new FileRecources();
 
     /**
      *
@@ -33,28 +19,32 @@ public class GenerateDescription extends GenerateTitle {
      */
     @Override
     public void generateOpenAI(TextInputControl description, AlertClass alert, RefreshWindow refresh) {
+        // Variable which read api key of file
+        String apiKeyDescription = fileRecources.fileManagerDescriptionOpenAI.readFile(fileRecources.apiFile);
 
-        // Variable which read title File
-        String readTitle = fileManagerDescriptionOpenAI.readFile(titleFile);
+        // Variable which read title of file
+        String readTitle = fileRecources.fileManagerDescriptionOpenAI.readFile(fileRecources.titleFile);
 
         // Varaible which set description to generating
         String generateDescription  = openAIConfigurator.generate("Generate a description based on the title inside the file I added"
                 + readTitle +
-                "Sentence have to max 10 words on the end write Look more and click in link below additionaly in the next line add link of file" + readLinkOfFile.showContent()
-                + "and add one empty next line and second Your sincerely Sales Menager AI",apiKey);
+                "Sentence have to max 10 words on the end write Look more and click in link below additionaly in the next line add link of file"
+                + fileRecources.readLinkOfFile.showContent()
+                + "and add one empty next line and second Your sincerely Sales Menager AI",apiKeyDescription);
 
+        // Variable which set generated text in field
         description.setText(generateDescription);
 
         // Variable which show description in TextField
         String inputDescription = description.getText();
 
-        boolean writeDescription = fileManagerDescriptionOpenAI.writeToFile(inputDescription);
+        boolean writeDescription = fileRecources.fileManagerDescriptionOpenAI.writeToFile(inputDescription);
         if(writeDescription){
             alert.alertMessage("Succes","✅ Generating descirption");
         } else {
             alert.alertMessage("Fail","❌ Generating description fail!");
         }
         // refresh window after showing description
-        refresh.refreshWindow(description,DESTRIPTION_PATH);
+        refresh.refreshWindow(description,fileRecources.DESTRIPTION_PATH);
     }
 }

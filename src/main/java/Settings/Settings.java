@@ -1,9 +1,8 @@
 package Settings;
 
 import CancelOption.CancelOption;
+import FileResources.FileRecources;
 import Interfaces.WindowViewInterface;
-import MenuProgram.Menu;
-import FileManagerClasses.FileManagerOpenAIClass;
 import SetEmail.SetEmail;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,27 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Settings extends SetEmail implements WindowViewInterface {
-    private static final Path HOST_ADDRESS = Paths.get(MAIN_PACKAGE_FILES,"hostAddress.txt");
-    private static final Path POST_OFFICE = Paths.get(MAIN_PACKAGE_FILES,"postOfficeChoose.txt");
-    private static final Path POST_PASSWORD = Paths.get(MAIN_PACKAGE_FILES,"postPassword.txt");
-    private static final Path PLACE_OF_CHOICE = Paths.get(MAIN_PACKAGE_FILES,"searchPoleDirection.txt");
 
-    public File hostAddressFile = new File(String.valueOf(HOST_ADDRESS));
-    public File postPasswordFile = new File(String.valueOf(POST_PASSWORD));
-    public File placeOfChoiceFile = new File(String.valueOf(PLACE_OF_CHOICE));
-
-    public FileManagerOpenAIClass postOfficeOption = new FileManagerOpenAIClass(POST_OFFICE);
-    public FileManagerOpenAIClass hostAddressSave = new FileManagerOpenAIClass(hostAddressFile.toPath());
-    public FileManagerOpenAIClass postPasswordSave = new FileManagerOpenAIClass(postPasswordFile.toPath());
-    public FileManagerOpenAIClass apiKeySave = new FileManagerOpenAIClass(apiFile.toPath());
-    public FileManagerOpenAIClass placeOfChoiceSave = new FileManagerOpenAIClass(placeOfChoiceFile.toPath());
+    // class where are paths , files , objects to serve methods
+    FileRecources fileRecources = new FileRecources();
 
     public PasswordField apiFieldKey = new PasswordField();
     public PasswordField tokenOrPasswordPostOfficeField = new PasswordField();
@@ -67,7 +51,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         apiFieldKey.setPrefSize(530,20);
 
         //Show content api key file
-        String apiKey = apiKeySave.readFile(apiFile);
+        String apiKey = fileRecources.apiKeySave.readFile(apiFile);
         apiFieldKey.setText(apiKey);
 
         HBox apiHBox = new HBox();
@@ -94,7 +78,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         hostAddressField.setPrefSize(530,20);
 
         // Show contail host adress file
-        String hostAdress = hostAddressSave.readFile(hostAddressFile);
+        String hostAdress = fileRecources.hostAddressSave.readFile(fileRecources.hostAddressFile);
         hostAddressField.setText(hostAdress);
 
         HBox hostAdressHBox = new HBox();
@@ -109,7 +93,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         tokenOrPasswordPostOfficeField.setPrefSize(530,20);
 
         //Show content post password file
-        String postPassword = postPasswordSave.readFile(postPasswordFile);
+        String postPassword = fileRecources.postPasswordSave.readFile(fileRecources.postPasswordFile);
         tokenOrPasswordPostOfficeField.setText(postPassword);
 
         HBox tokenOrPasswordPostOfficeHBox = new HBox();
@@ -124,7 +108,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         placeOfChoiceLabelField.setPrefSize(530,20);
 
         //Show content post password file
-        String placeOfChoice = placeOfChoiceSave.readFile(placeOfChoiceFile);
+        String placeOfChoice = fileRecources.placeOfChoiceSave.readFile(fileRecources.placeOfChoiceFile);
         placeOfChoiceLabelField.setText(placeOfChoice);
 
         HBox pathForSearchPlaceOfFileHBox = new HBox();
