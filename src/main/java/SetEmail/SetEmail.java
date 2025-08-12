@@ -5,6 +5,7 @@ import CancelOption.CancelOption;
 import FileManagerClasses.FileManagerOpenAIClass;
 import FileManagerClasses.FileManagerClass;
 import Alert.AlertClass;
+import FileResources.FileRecources;
 import Interfaces.WindowViewInterface;
 import RefreshWindow.RefreshWindow;
 import javafx.event.ActionEvent;
@@ -16,26 +17,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 public class SetEmail implements WindowViewInterface{
-    public static final String MAIN_PACKAGE_FILES = "src/main/ProgramFiles";
-    private static final Path FROM_PATH = Paths.get(MAIN_PACKAGE_FILES , "myEmailFile.txt");
-    private static final Path TITLE_PATH = Paths.get(MAIN_PACKAGE_FILES , "emailTitleFile.txt");
-    private static final Path API_PATH = Paths.get(MAIN_PACKAGE_FILES , "APIKEY.txt");
-    private static final Path DESTRIPTION_PATH = Paths.get(MAIN_PACKAGE_FILES , "descriptionFile.txt");
 
-    public File myEmailFile = new File(String.valueOf(FROM_PATH));
-    public File titleFile = new File(String.valueOf(TITLE_PATH));
-    public File apiFile = new File(String.valueOf(API_PATH));
-    public File descriptionFile = new File(String.valueOf(DESTRIPTION_PATH));
-
-    public FileManagerClass fileSetYourEmailClass = new FileManagerClass(myEmailFile.toPath());
-    public FileManagerOpenAIClass saveTitleOpenAI = new FileManagerOpenAIClass(titleFile.toPath());
-    public FileManagerOpenAIClass descriptionOpenAI = new FileManagerOpenAIClass(descriptionFile.toPath());
-
+    // class where are paths , files , objects to serve methods
+    FileRecources fileRecourcesSetEmail = new FileRecources();
 
     public TextField fromSetEmail = new TextField();
     public TextField title = new TextField();
@@ -84,7 +71,7 @@ public class SetEmail implements WindowViewInterface{
         HBox.setMargin(fromSetEmail,new Insets(15,0,0,10));
 
         //Loop which show email in input fromSetEmail
-        String myEmailData = fileSetYourEmailClass.showContent();
+        String myEmailData = fileRecourcesSetEmail.fileSetYourEmailClass.showContent();
         fromSetEmail.setText(myEmailData);
 
         // Label and TextField for To email input and HBox
@@ -120,7 +107,7 @@ public class SetEmail implements WindowViewInterface{
         HBox.setMargin(title,new Insets(15,0,0,10));
 
         // Loop which show title text in input
-        String showTitleAI = saveTitleOpenAI.showContent();
+        String showTitleAI = fileRecourcesSetEmail.saveTitleOpenAI.showContent();
         title.setText(showTitleAI);
 
         //Label,TextArea,HBox for Description Email
@@ -134,7 +121,7 @@ public class SetEmail implements WindowViewInterface{
         HBox.setMargin(descriptionLabel,new Insets(45,-2,0,15));
         HBox.setMargin(description,new Insets(15,0,0,10));
 
-        String showDescriptionAI = descriptionOpenAI.showContent();
+        String showDescriptionAI = fileRecourcesSetEmail.descriptionOpenAI.showContent();
         description.setText(showDescriptionAI);
 
         //Button to generate title using OpenAI

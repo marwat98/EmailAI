@@ -1,6 +1,7 @@
 package GmailSendMessage;
 
 import AbstractClasses.EmailSendClass;
+import FileResources.FileRecources;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,8 +12,8 @@ import javax.mail.internet.MimeMessage;
 
 public class GmailSend extends EmailSendClass {
 
-    public GmailSend(String myEmail, String sendEmail, String hostAdress, String password) {
-        super(myEmail, sendEmail, hostAdress, password);
+    public GmailSend(String myEmail, String sendEmail, String topic, String description , String hostAdress, String password) {
+        super(myEmail, sendEmail,topic,description,hostAdress, password);
     }
 
     @Override
@@ -31,20 +32,23 @@ public class GmailSend extends EmailSendClass {
     public Session getSessionInstance() {
         return super.getSessionInstance();
     }
-    public void sendMail() {
+
+    public boolean sendMail() {
         try {
             MimeMessage message = new MimeMessage(getSessionInstance());
             message.setFrom(new InternetAddress(myEmail));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(sendEmail));
-            message.setSubject("Topic");
-            message.setText("Text");
+            message.setSubject(topic);
+            message.setText(description);
 
             Transport.send(message);
             System.out.println("Email sent successfully.");
+            return true;
 
-        } catch (MessagingException mex) {
-            System.out.println("Send failed, exception: " + mex);
+        } catch (MessagingException e) {
+            System.out.println("Send failed, exception: " + e.getMessage());
         }
+        return true;
     }
 }
 

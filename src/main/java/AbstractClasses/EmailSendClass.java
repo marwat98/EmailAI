@@ -8,13 +8,17 @@ import java.util.Properties;
 public abstract class EmailSendClass {
     protected final String myEmail;
     protected final String sendEmail;
+    protected final String topic;
+    protected final String description;
     protected final String hostAdress;
     protected final String password;
     protected final Properties props = new Properties();
 
-    public EmailSendClass(String myEmail,String sendEmail, String hostAdress, String password){
+    public EmailSendClass(String myEmail,String sendEmail, String topic, String description,String hostAdress, String password){
         this.myEmail = myEmail;
         this.sendEmail = sendEmail;
+        this.topic = topic;
+        this.description = description;
         this.hostAdress = hostAdress;
         this.password = password;
     }

@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 public class Settings extends SetEmail implements WindowViewInterface {
 
     // class where are paths , files , objects to serve methods
-    FileRecources fileRecources = new FileRecources();
+    FileRecources fileRecourcesSettings = new FileRecources();
 
     public PasswordField apiFieldKey = new PasswordField();
     public PasswordField tokenOrPasswordPostOfficeField = new PasswordField();
@@ -51,7 +51,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         apiFieldKey.setPrefSize(530,20);
 
         //Show content api key file
-        String apiKey = fileRecources.apiKeySave.readFile(apiFile);
+        String apiKey = fileRecourcesSettings.apiKeySave.readFile(fileRecourcesSettings.apiFile);
         apiFieldKey.setText(apiKey);
 
         HBox apiHBox = new HBox();
@@ -78,7 +78,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         hostAddressField.setPrefSize(530,20);
 
         // Show contail host adress file
-        String hostAdress = fileRecources.hostAddressSave.readFile(fileRecources.hostAddressFile);
+        String hostAdress = fileRecourcesSettings.hostAddressSave.readFile(fileRecourcesSettings.hostAddressFile);
         hostAddressField.setText(hostAdress);
 
         HBox hostAdressHBox = new HBox();
@@ -93,7 +93,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         tokenOrPasswordPostOfficeField.setPrefSize(530,20);
 
         //Show content post password file
-        String postPassword = fileRecources.postPasswordSave.readFile(fileRecources.postPasswordFile);
+        String postPassword = fileRecourcesSettings.postPasswordSave.readFile(fileRecourcesSettings.postPasswordFile);
         tokenOrPasswordPostOfficeField.setText(postPassword);
 
         HBox tokenOrPasswordPostOfficeHBox = new HBox();
@@ -108,7 +108,7 @@ public class Settings extends SetEmail implements WindowViewInterface {
         placeOfChoiceLabelField.setPrefSize(530,20);
 
         //Show content post password file
-        String placeOfChoice = fileRecources.placeOfChoiceSave.readFile(fileRecources.placeOfChoiceFile);
+        String placeOfChoice = fileRecourcesSettings.placeOfChoiceSave.readFile(fileRecourcesSettings.placeOfChoiceFile);
         placeOfChoiceLabelField.setText(placeOfChoice);
 
         HBox pathForSearchPlaceOfFileHBox = new HBox();

@@ -2,18 +2,22 @@ package SetEmail;
 
 import FileManagerClasses.FileManagerClass;
 import FileManagerClasses.FileManagerOpenAIClass;
+import FileResources.FileRecources;
 import Interfaces.SaveSetEmailSettingsInterface;
 import RefreshWindow.RefreshWindow;
 import javafx.scene.control.TextField;
 import Alert.AlertClass;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static SetEmail.SetEmail.MAIN_PACKAGE_FILES;
+import static FileResources.FileRecources.FROM_PATH;
+import static FileResources.FileRecources.TITLE_PATH;
+
 
 public class SaveSetEmailSettings implements SaveSetEmailSettingsInterface {
+
+    // class where are paths , files , objects to serve methods
+    FileRecources fileRecourcesSaveSetEmail = new FileRecources();
+
     /**
      *
      * @param fromSetEmail field which set your email
@@ -24,16 +28,9 @@ public class SaveSetEmailSettings implements SaveSetEmailSettingsInterface {
     @Override
     public void save(TextField fromSetEmail, TextField title, AlertClass alert, RefreshWindow refresh) {
 
-        final Path FROM_PATH = Paths.get(MAIN_PACKAGE_FILES , "myEmailFile.txt");
-        final Path TITLE_PATH = Paths.get(MAIN_PACKAGE_FILES , "emailTitleFile.txt");
-
-        File titleFile = new File(String.valueOf(TITLE_PATH));
-        File myEmailFile = new File(String.valueOf(FROM_PATH));
-
-
         try{
-            FileManagerClass fileSetYourEmailClass = new FileManagerClass(myEmailFile.toPath());
-            FileManagerOpenAIClass saveTitleOpenAI = new FileManagerOpenAIClass(titleFile.toPath());
+            FileManagerClass fileSetYourEmailClass = new FileManagerClass(fileRecourcesSaveSetEmail.myEmailFile.toPath());
+            FileManagerOpenAIClass saveTitleOpenAI = new FileManagerOpenAIClass(fileRecourcesSaveSetEmail.titleFile.toPath());
 
             boolean fromSaveToFile = fileSetYourEmailClass.writeToFile(fromSetEmail.getText());
             boolean toSaveTitleToFile = saveTitleOpenAI.writeToFile(title.getText());

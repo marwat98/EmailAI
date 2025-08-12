@@ -7,10 +7,13 @@ import OpenAIConfigurator.OpenAIConfigurator;
 import RefreshWindow.RefreshWindow;
 import javafx.scene.control.TextInputControl;
 
+import static FileResources.FileRecources.TITLE_PATH;
+
 public class GenerateTitle implements GenerateInterface {
 
     // class where are paths , files , objects to serve methods
-    FileRecources fileRecources = new FileRecources();
+    FileRecources fileRecourcesGenerateTitle = new FileRecources();
+
     // class which settings Open AI
     OpenAIConfigurator openAIConfigurator = new OpenAIConfigurator();
 
@@ -22,7 +25,7 @@ public class GenerateTitle implements GenerateInterface {
      */
     @Override
     public void generateOpenAI(TextInputControl title, AlertClass alert, RefreshWindow refresh) {
-        String apiKeyTitle = fileRecources.fileManagerTitleOpenAI.readFile(fileRecources.apiFile);
+        String apiKeyTitle = fileRecourcesGenerateTitle.fileManagerTitleOpenAI.readFile(fileRecourcesGenerateTitle.apiFile);
         try{
             // Variable which generate title using OpenAI
             String generateTitle  = openAIConfigurator.generate("Generate only one email title with greetings without description", apiKeyTitle);
@@ -34,14 +37,14 @@ public class GenerateTitle implements GenerateInterface {
             String input = title.getText();
 
             // Variable which checking if writeToFile method return true
-            boolean writeTitle = fileRecources.fileManagerTitleOpenAI.writeToFile(input);
+            boolean writeTitle = fileRecourcesGenerateTitle.fileManagerTitleOpenAI.writeToFile(input);
             if(writeTitle){
                 alert.alertMessage("Succes","✅ Generating title");
             } else {
                 alert.alertMessage("Fail","❌ Generating title fail!");
             }
             // refresh window after showing title
-            refresh.refreshWindow(title, fileRecources.TITLE_PATH);
+            refresh.refreshWindow(title, TITLE_PATH);
         } catch (Exception e) {
             alert.alertMessage("File/API Error", "Problem with saving or generating: " + e.getMessage());
         }
