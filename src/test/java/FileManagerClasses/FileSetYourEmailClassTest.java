@@ -1,5 +1,6 @@
 package FileManagerClasses;
 
+import EmailAIWindowAplication.FileManagerClasses.FileManagerClass;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 
