@@ -1,6 +1,6 @@
 package EmailAITerminalRun.GmailSendMessage;
 
-import EmailAIWindowAplication.AbstractClasses.EmailSendClass;
+import EmailAIWindowApplication.AbstractClasses.EmailSendClass;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;

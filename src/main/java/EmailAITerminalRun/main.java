@@ -1,6 +1,6 @@
 package EmailAITerminalRun;
 
-import EmailAIWindowAplication.FileResources.FileRecources;
+import EmailAIWindowApplication.FileResources.FileRecources;
 import EmailAITerminalRun.GmailSendMessage.GmailSend;
 
 public class main {
